@@ -3,7 +3,8 @@ package net.intellij.window;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 
-import java.awt.*;
+import java.awt.Container;
+import java.awt.Window;
 
 /**
  * This class is programmatically instantiated and registered when opening and closing projects

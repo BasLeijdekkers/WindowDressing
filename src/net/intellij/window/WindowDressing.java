@@ -6,7 +6,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.WindowManager;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
+import java.awt.Container;
 
 public class WindowDressing implements ProjectComponent {
 
@@ -46,6 +46,10 @@ public class WindowDressing implements ProjectComponent {
 	}
 
 	public void projectClosed() {
+		final ActionManager actionManager = ActionManager.getInstance();
+		final WindowActionGroup windowActionGroup =
+				(WindowActionGroup) actionManager.getAction("net.intellij.window.WindowActionGroup");
+		windowActionGroup.removeProjectContainer(project.getName(), projectContainer);
 		project = null;
 		projectContainer = null;
 	}

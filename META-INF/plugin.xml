@@ -1,8 +1,8 @@
 <!DOCTYPE idea-plugin PUBLIC "Plugin/DTD" "http://plugins.intellij.net/plugin.dtd">
 <idea-plugin>
   <name>net.intellij.window.WindowDressing</name>
-  <description>Adds open projects to the Window menu for easy switching between projects. A must
-  have on Mac OS X</description>
+  <description>Adds open projects to the Window menu for easy switching between projects. A
+    musthave on Mac OS X</description>
   <version>1.0</version>
   <vendor>Bas Leijdekkers</vendor>
   <idea-version since-build="5646"/>
