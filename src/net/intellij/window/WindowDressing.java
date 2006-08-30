@@ -30,8 +30,8 @@ public class WindowDressing implements ProjectComponent {
 
 	public void projectOpened() {
 		final ActionManager actionManager = ActionManager.getInstance();
-		final WindowActionGroup windowActionGroup =
-				(WindowActionGroup) actionManager.getAction("net.intellij.window.WindowActionGroup");
+		final WindowActionGroup windowActionGroup = (WindowActionGroup)
+				actionManager.getAction("net.intellij.window.WindowActionGroup");
 		final WindowManager windowManager = WindowManager.getInstance();
 		projectContainer = windowManager.suggestParentWindow(project);
 		if (projectContainer == null) {
@@ -47,8 +47,8 @@ public class WindowDressing implements ProjectComponent {
 
 	public void projectClosed() {
 		final ActionManager actionManager = ActionManager.getInstance();
-		final WindowActionGroup windowActionGroup =
-				(WindowActionGroup) actionManager.getAction("net.intellij.window.WindowActionGroup");
+		final WindowActionGroup windowActionGroup = (WindowActionGroup)
+				actionManager.getAction("net.intellij.window.WindowActionGroup");
 		windowActionGroup.removeProjectContainer(project.getName(), projectContainer);
 		project = null;
 		projectContainer = null;
