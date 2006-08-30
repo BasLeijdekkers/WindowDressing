@@ -1,10 +1,11 @@
 package net.intellij.window;
 
-import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.ToggleAction;
 
 import java.awt.Container;
 import java.awt.Window;
+import java.awt.Frame;
 
 /**
  * This class is programmatically instantiated and registered when opening and closing projects
@@ -12,7 +13,7 @@ import java.awt.Window;
  * @author Bas Leijdekkers
  */
 @SuppressWarnings({"ComponentNotRegistered"})
-public class WindowAction extends AnAction {
+public class WindowAction extends ToggleAction {
 
 	private Container projectContainer;
 
@@ -21,15 +22,29 @@ public class WindowAction extends AnAction {
 		this.projectContainer = projectContainer;
 	}
 
-	public void actionPerformed(AnActionEvent e) {
-		projectContainer.setVisible(true);
-		if (projectContainer instanceof Window) {
-			final Window window = (Window) projectContainer;
-			window.toFront();
-		}
-	}
-
 	public Container getProjectContainer() {
 		return projectContainer;
+	}
+
+	public boolean isSelected(AnActionEvent e) {
+		if (projectContainer.isVisible()) {
+			if (projectContainer instanceof Window) {
+				final Window window = (Window) projectContainer;
+				return window.isActive();
+			}
+		}
+		return false;
+	}
+
+	public void setSelected(AnActionEvent e, boolean state) {
+		if (!state) {
+			return;
+		}
+		projectContainer.setVisible(true);
+		if (projectContainer instanceof Frame) {
+			final Frame frame = (Frame) projectContainer;
+			frame.setExtendedState(Frame.NORMAL);
+			frame.toFront();
+		}
 	}
 }
