@@ -10,7 +10,6 @@ import java.awt.Frame;
 /**
  * This class is programmatically instantiated and registered when opening and closing projects
  * and thus not registered in plugin.xml
- * @author Bas Leijdekkers
  */
 @SuppressWarnings({"ComponentNotRegistered"})
 public class WindowAction extends ToggleAction {
@@ -43,7 +42,10 @@ public class WindowAction extends ToggleAction {
 		projectContainer.setVisible(true);
 		if (projectContainer instanceof Frame) {
 			final Frame frame = (Frame) projectContainer;
-			frame.setExtendedState(Frame.NORMAL);
+			final int frameState = frame.getExtendedState();
+			if (frameState == Frame.ICONIFIED) {
+				frame.setExtendedState(frameState ^ Frame.ICONIFIED);
+			}
 			frame.toFront();
 		}
 	}
