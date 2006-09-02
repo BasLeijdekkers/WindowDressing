@@ -25,16 +25,15 @@ import java.awt.Frame;
 /**
  * This class is programmatically instantiated and registered when opening and closing projects
  * and thus not registered in plugin.xml
- * @author Bas Leijdekkers
  */
 @SuppressWarnings({"ComponentNotRegistered"})
 public class WindowAction extends ToggleAction {
 
 	@NotNull private Frame projectFrame;
 
-	public WindowAction(@NotNull String name, @NotNull Frame projectContainer) {
+	public WindowAction(@NotNull String name, @NotNull Frame projectFrame) {
 		super(name);
-		this.projectFrame = projectContainer;
+		this.projectFrame = projectFrame;
 	}
 
 	public Container getProjectFrame() {
@@ -42,21 +41,20 @@ public class WindowAction extends ToggleAction {
 	}
 
 	public boolean isSelected(AnActionEvent e) {
-		if (projectFrame.isVisible()) {
-			return projectFrame.isActive();
-		}
-		return false;
+		return projectFrame.isVisible() && projectFrame.isActive();
 	}
 
 	public void setSelected(AnActionEvent e, boolean state) {
 		if (!state) {
 			return;
 		}
-		projectFrame.setVisible(true);
+		projectFrame.setVisible(true); // you never know
 		final int frameState = projectFrame.getExtendedState();
 		if ((frameState & Frame.ICONIFIED) == Frame.ICONIFIED) {
+			// restore the frame if it is minimized
 			projectFrame.setExtendedState(frameState ^ Frame.ICONIFIED);
 		}
+		// bring the frame forward
 		projectFrame.toFront();
 	}
 }
