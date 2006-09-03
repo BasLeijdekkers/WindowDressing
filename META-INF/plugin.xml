@@ -5,8 +5,9 @@
     musthave on Mac OS X and pretty useful on other platforms too.</description>
   <version>1.0</version>
   <vendor>Bas Leijdekkers</vendor>
-  <idea-version since-build="5646"/>
-	<project-components>
+  <idea-version since-build="4137"/>
+  
+  <project-components>
 		<component>
 			<implementation-class>net.intellij.window.WindowDressing</implementation-class>
 		</component>
