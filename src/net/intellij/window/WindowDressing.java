@@ -44,7 +44,7 @@ public class WindowDressing implements ProjectComponent {
 		return "WindowDressing";
 	}
 
-	public Frame getProjectFrame(@NotNull Project project) {
+	public static Frame getProjectFrame(@NotNull Project project) {
 		final WindowManager windowManager = WindowManager.getInstance();
 		Container projectContainer = windowManager.suggestParentWindow(project);
 		if (projectContainer == null) {

@@ -28,9 +28,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * @author Bas Leijdekkers
- */
 public class WindowActionGroup extends ActionGroup {
 
 	private List<AnAction> children = new ArrayList();

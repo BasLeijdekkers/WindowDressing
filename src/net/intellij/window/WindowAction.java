@@ -41,14 +41,14 @@ public class WindowAction extends ToggleAction {
 	}
 
 	public boolean isSelected(AnActionEvent e) {
+		// show check mark for active and visible project frame
 		return projectFrame.isVisible() && projectFrame.isActive();
 	}
 
-	public void setSelected(AnActionEvent e, boolean state) {
-		if (!state) {
+	public void setSelected(AnActionEvent e, boolean selected) {
+		if (!selected) {
 			return;
 		}
-		projectFrame.setVisible(true); // you never know
 		final int frameState = projectFrame.getExtendedState();
 		if ((frameState & Frame.ICONIFIED) == Frame.ICONIFIED) {
 			// restore the frame if it is minimized

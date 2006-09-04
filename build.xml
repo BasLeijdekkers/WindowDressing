@@ -1,46 +1,89 @@
+<!--
+Copyright 2006 Bas Leijdekkers
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
 <project name="WindowDressing" default="jar" basedir=".">
+
   <property name="idea.config.home" value="${user.home}/.IntelliJIdea60"/>
-  <property name="idea.home" value="c:/Program Files/java/idea_demetra/"/>
+  <property name="idea.home" value="C:/Program Files/idea_demetra/"/>
+  <property name="retrotranslator.home" value="C:\Program Files\Java\retrotranslator"/>
+  <property name="rt.jar" value="C:/Program Files/Java/jdk1.4.2_10/jre/lib/rt.jar"/>
+
+  <property name="src.dir" value="src"/>
+  <property name="build.dir" value="build"/>
+  <property name="build.jars.dir" value="${build.dir}/jars"/>
+  <property name="build.classes.dir" value="${build.dir}/classes"/>
+
+  <taskdef name="retrotranslate" classname="net.sf.retrotranslator.transformer.RetrotranslatorTask">
+    <classpath>
+      <pathelement path="${retrotranslator.home}/retrotranslator-transformer-1.0.8.jar"/>
+      <pathelement path="${retrotranslator.home}/retrotranslator-runtime-1.0.8.jar"/>
+      <pathelement path="${retrotranslator.home}/backport-util-concurrent.jar"/>
+    </classpath>
+  </taskdef>
 
   <path id="project.class.path">
-    <pathelement location="${idea.home}/lib/openAPI.jar"/>
+    <pathelement location="${idea.home}/redist/openapi.jar"/>
+    <pathelement location="${idea.home}/redist/annotations.jar"/>
+    <pathelement path="${rt.jar}"/>
   </path>
 
   <target name="src" description="zips up all sources for distribution">
     <zip destfile="${ant.project.name}_src.zip"
          basedir="."
-         includes="src/** META-INF/** build.xml *.ipr *.iml"
+         includes="${src.dir}/** META-INF/** build.xml *.ipr *.iml"
          excludes="CVS/**"
     />
   </target>
 
   <target name="zip" description="creates a complete project archive" depends="jar,src">
     <zip destfile="${ant.project.name}.zip">
-      <zipfileset dir="build/lib" includes="WindowDressing.jar" fullpath="lib/WindowDressing.jar"/>
-      <zipfileset dir="." includes="WindowDressing_src.zip"/>
+      <zipfileset dir="${build.jars.dir}"
+                  includes="${ant.project.name}.jar" 
+                  fullpath="lib/${ant.project.name}.jar"/>
+      <zipfileset dir="." includes="${ant.project.name}_src.zip"/>
     </zip>
   </target>
 
-  <target name="deploy" description="deploys the plugin to the default plugin dir" depends="jar">
-    <copy file="build/lib/${ant.project.name}.jar"
-          todir="${user.home}/${idea.config.home}/config/plugins"/>
+  <target name="deploy" description="deploys the plugin to the plugin dir" depends="jar">
+    <copy file="${build.jars.dir}/${ant.project.name}.jar"
+          todir="${idea.config.home}/config/plugins"/>
   </target>
 
+
   <target name="jar" depends="compile" description="create the plugin jar file">
-    <mkdir dir="build/lib"/>
-    <jar jarfile="build/lib/${ant.project.name}.jar" compress="true">
-      <fileset dir="build/classes" includes="**/*.class"/>
+    <mkdir dir="${build.jars.dir}"/>
+    <jar jarfile="${build.jars.dir}/${ant.project.name}.jar" compress="true">
+      <fileset dir="${build.classes.dir}" includes="**/*.class"/>
       <fileset dir="." includes="META-INF/plugin.xml"/>
     </jar>
+    <retrotranslate
+    srcjar="${build.jars.dir}/${ant.project.name}.jar"
+    destjar="${build.jars.dir}/${ant.project.name}.jar"
+    verify="true">
+      <classpath refid="project.class.path"/>
+    </retrotranslate>
   </target>
 
   <target name="compile" description="compiles all classes in the project">
-    <mkdir dir="build/classes"/>
-    <javac optimize="true" debug="true" srcdir="src" destdir="build/classes"
-    classpath="project.class.path"/>
+    <mkdir dir="${build.classes.dir}"/>
+    <javac optimize="true" debug="true" srcdir="${src.dir}" destdir="${build.classes.dir}">
+      <classpath refid="project.class.path"/>
+    </javac>
   </target>
 
   <target name="clean" description="clean out the build directory">
-    <deltree dir="build"/>
+    <delete dir="build"/>
   </target>
 </project>
