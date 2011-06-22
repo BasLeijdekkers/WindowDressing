@@ -1,5 +1,5 @@
 <!--
-Copyright 2006 Bas Leijdekkers
+Copyright 2006-2011 Bas Leijdekkers
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,28 +15,17 @@ limitations under the License.
 -->
 <project name="WindowDressing" default="jar" basedir=".">
 
-  <property name="idea.config.home" value="${user.home}/.IntelliJIdea60"/>
-  <property name="idea.home" value="C:/Program Files/idea_demetra/"/>
-  <property name="retrotranslator.home" value="C:\Program Files\Java\retrotranslator"/>
-  <property name="rt.jar" value="C:/Program Files/Java/jdk1.4.2_10/jre/lib/rt.jar"/>
+  <property name="idea.plugin.home" value="${user.home}/Library/Application Support/IntelliJIdea11"/>
+  <property name="idea.home" value="/Applications/IntelliJ IDEA XI.app"/>
 
   <property name="src.dir" value="src"/>
   <property name="build.dir" value="build"/>
   <property name="build.jars.dir" value="${build.dir}/jars"/>
   <property name="build.classes.dir" value="${build.dir}/classes"/>
 
-  <taskdef name="retrotranslate" classname="net.sf.retrotranslator.transformer.RetrotranslatorTask">
-    <classpath>
-      <pathelement path="${retrotranslator.home}/retrotranslator-transformer-1.0.8.jar"/>
-      <pathelement path="${retrotranslator.home}/retrotranslator-runtime-1.0.8.jar"/>
-      <pathelement path="${retrotranslator.home}/backport-util-concurrent.jar"/>
-    </classpath>
-  </taskdef>
-
-  <path id="project.class.path">
+  <path id="project.classpath">
     <pathelement location="${idea.home}/redist/openapi.jar"/>
     <pathelement location="${idea.home}/redist/annotations.jar"/>
-    <pathelement path="${rt.jar}"/>
   </path>
 
   <target name="src" description="zips up all sources for distribution">
@@ -58,7 +47,7 @@ limitations under the License.
 
   <target name="deploy" description="deploys the plugin to the plugin dir" depends="jar">
     <copy file="${build.jars.dir}/${ant.project.name}.jar"
-          todir="${idea.config.home}/config/plugins"/>
+          todir="${idea.plugin.home}"/>
   </target>
 
 
@@ -68,18 +57,12 @@ limitations under the License.
       <fileset dir="${build.classes.dir}" includes="**/*.class"/>
       <fileset dir="." includes="META-INF/plugin.xml"/>
     </jar>
-    <retrotranslate
-    srcjar="${build.jars.dir}/${ant.project.name}.jar"
-    destjar="${build.jars.dir}/${ant.project.name}.jar"
-    verify="true">
-      <classpath refid="project.class.path"/>
-    </retrotranslate>
   </target>
 
   <target name="compile" description="compiles all classes in the project">
     <mkdir dir="${build.classes.dir}"/>
     <javac optimize="true" debug="true" srcdir="${src.dir}" destdir="${build.classes.dir}">
-      <classpath refid="project.class.path"/>
+      <classpath refid="project.classpath"/>
     </javac>
   </target>
 
