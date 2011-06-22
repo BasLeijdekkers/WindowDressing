@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Bas Leijdekkers
+ * Copyright 2006-2011 Bas Leijdekkers, Maarten Hazewinkel
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,44 +15,77 @@
  */
 package net.intellij.window;
 
-import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.Separator;
+import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.awt.Container;
-import java.awt.Frame;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+public class WindowActionGroup extends DefaultActionGroup {
 
-public class WindowActionGroup extends ActionGroup {
+    private WindowAction latest = null;
 
-	private List<AnAction> children = new ArrayList();
+    public void addProject(@NotNull String name) {
+        final WindowAction windowAction = new WindowAction(name, latest);
+        add(windowAction);
+        latest = windowAction;
+    }
 
-	public void addProjectFrame(@NotNull String name, @NotNull Frame projectFrame) {
-		if (children.isEmpty()) {
-			children.add(Separator.getInstance());
-		}
-		children.add(new WindowAction(name, projectFrame));
-	}
+    public void removeProject(@NotNull String name) {
+        final WindowAction windowAction = findWindowAction(name);
+        if (windowAction == null) {
+            return;
+        }
+        if (latest == windowAction) {
+            final WindowAction previous = latest.getPrevious();
+            if (previous != latest) {
+                latest = previous;
+            } else {
+                latest = null;
+            }
+        }
+        remove(windowAction);
+    }
 
-	public AnAction[] getChildren(@Nullable AnActionEvent e) {
-		return children.toArray(new AnAction[children.size()]);
-	}
+    public boolean isEnabled() {
+        return latest.getPrevious() != latest;
+    }
 
-	public void removeProjectFrame(@NotNull String name, @NotNull Frame projectFrame) {
-		for (Iterator<AnAction> iterator = children.iterator(); iterator.hasNext();) {
-			final AnAction child = iterator.next();
-			if (child instanceof WindowAction) {
-				final WindowAction windowAction = (WindowAction)child;
-				if (name.equals(windowAction.getTemplatePresentation().getText()) &&
-				    projectFrame.equals(windowAction.getProjectFrame())) {
-					iterator.remove();
-				}
-			}		
-		}
-	}
+    @Override
+    public boolean isDumbAware() {
+        return true;
+    }
+
+    public void activateNextWindow(AnActionEvent e) {
+        final Project project = e.getProject();
+        final WindowAction windowAction = findWindowAction(project.getName());
+        final WindowAction next = windowAction.getNext();
+        if (next != null) {
+            next.setSelected(e, true);
+        }
+    }
+
+    public void activatePreviousWindow(AnActionEvent e) {
+        final Project project = e.getProject();
+        final WindowAction windowAction = findWindowAction(project.getName());
+        final WindowAction previous = windowAction.getPrevious();
+        if (previous != null) {
+            previous.setSelected(e, true);
+        }
+    }
+
+    private WindowAction findWindowAction(String name) {
+        final AnAction[] children = getChildren(null);
+        for (int i = 0; i < children.length; i++) {
+            final AnAction child = children[i];
+            if (!(child instanceof WindowAction)) {
+                continue;
+            }
+            final WindowAction windowAction = (WindowAction)child;
+            if (name.equals(windowAction.getTemplatePresentation().getText())) {
+                return windowAction;
+            }
+        }
+        return null;
+    }
 }

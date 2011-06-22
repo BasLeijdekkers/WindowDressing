@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Bas Leijdekkers
+ * Copyright 2006-2011 Bas Leijdekkers, Maarten Hazewinkel
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,63 +18,40 @@ package net.intellij.window;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.wm.WindowManager;
 import org.jetbrains.annotations.NotNull;
-
-import java.awt.Container;
-import java.awt.Frame;
 
 public class WindowDressing implements ProjectComponent {
 
-	private Project project;
-	private Frame projectFrame = null;
+    private String projectName;
 
-	public WindowDressing(@NotNull Project project) {
-		this.project = project;
-	}
+    public WindowDressing(@NotNull Project project) {
+        this.projectName = project.getName();
+    }
 
-	public void initComponent() {
-	}
+    public void initComponent() {
+    }
 
-	public void disposeComponent() {
-	}
+    public void disposeComponent() {
+    }
 
-	@NotNull
-	public String getComponentName() {
-		return "WindowDressing";
-	}
+    @NotNull
+    public String getComponentName() {
+        return "WindowDressing";
+    }
 
-	public static Frame getProjectFrame(@NotNull Project project) {
-		final WindowManager windowManager = WindowManager.getInstance();
-		Container projectContainer = windowManager.suggestParentWindow(project);
-		if (projectContainer == null) {
-			return null;
-		}
-		Container parent = projectContainer.getParent();
-		while (parent != null) {
-			projectContainer = parent;
-			parent = projectContainer.getParent();
-		}
-		if (!(projectContainer instanceof Frame)) {
-			return null;
-		}
-		return (Frame)projectContainer;
-	}
+    public void projectOpened() {
+        final WindowActionGroup windowActionGroup = getWindowActionGroup();
+        windowActionGroup.addProject(projectName);
+    }
 
-	public void projectOpened() {
-		final ActionManager actionManager = ActionManager.getInstance();
-		final WindowActionGroup windowActionGroup = (WindowActionGroup)
-				actionManager.getAction("net.intellij.window.WindowActionGroup");
-		projectFrame = getProjectFrame(project);
-		windowActionGroup.addProjectFrame(project.getName(), projectFrame);
-	}
+    public void projectClosed() {
+        final WindowActionGroup windowActionGroup = getWindowActionGroup();
+        windowActionGroup.removeProject(projectName);
+    }
 
-	public void projectClosed() {
-		final ActionManager actionManager = ActionManager.getInstance();
-		final WindowActionGroup windowActionGroup = (WindowActionGroup)
-				actionManager.getAction("net.intellij.window.WindowActionGroup");
-		windowActionGroup.removeProjectFrame(project.getName(), projectFrame);
-		project = null;
-		projectFrame = null;
-	}
+    public static WindowActionGroup getWindowActionGroup() {
+        final ActionManager actionManager = ActionManager.getInstance();
+        return (WindowActionGroup)
+                actionManager.getAction("net.intellij.window.WindowActionGroup");
+    }
 }
