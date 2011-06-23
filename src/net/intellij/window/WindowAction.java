@@ -16,6 +16,7 @@
 package net.intellij.window;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
@@ -73,7 +74,7 @@ public class WindowAction extends ToggleAction implements DumbAware {
     }
 
     @Nullable
-    private static Frame getProjectFrame(@NotNull String projectName) {
+    static Frame getProjectFrame(@NotNull String projectName) {
         final Project[] projects = ProjectManager.getInstance().getOpenProjects();
         for (Project project : projects) {
             if (projectName.equals(project.getName())) {
@@ -86,7 +87,7 @@ public class WindowAction extends ToggleAction implements DumbAware {
 
     public boolean isSelected(AnActionEvent e) {
         // show check mark for active and visible project frame
-        final Project project = e.getProject();
+        final Project project = e.getData(PlatformDataKeys.PROJECT);
         final String text = getTemplatePresentation().getText();
         return text.equals(project.getName());
     }
