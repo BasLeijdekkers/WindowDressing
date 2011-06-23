@@ -74,7 +74,7 @@ public class WindowAction extends ToggleAction implements DumbAware {
     }
 
     @Nullable
-    private static Frame getProjectFrame(@NotNull String projectName) {
+    static Frame getProjectFrame(@NotNull String projectName) {
         final Project[] projects = ProjectManager.getInstance().getOpenProjects();
         for (Project project : projects) {
             if (projectName.equals(project.getName())) {

@@ -1,11 +1,15 @@
 <!DOCTYPE idea-plugin PUBLIC "Plugin/DTD" "http://plugins.intellij.net/plugin.dtd">
 <idea-plugin version="2">
   <name>WindowDressing</name>
-  <version>2.0</version>
+  <version>2.1</version>
 
   <description><![CDATA[Adds open projects to the Window menu for easy switching between projects. A
     musthave on Mac OS X and pretty useful on other platforms too.]]></description>
   <change-notes><![CDATA[
+    v2.1<br>
+    * Remember and restore project window positions<br>
+    * Fix incompatibility with IDEA 10.5
+    <br>
     v2.0<br>
     * WindowDressing is now available for all IntelliJ Platform products<br>
     * New Next/Previous Project Window menu items with keyboard shortcuts<br>
@@ -39,4 +43,9 @@
       <reference ref="WindowDressing.PreviousWindow"/>
     </group>
   </actions>
+  <application-components>
+    <component>
+        <implementation-class>net.intellij.window.WindowPositionMemoizer</implementation-class>
+    </component>
+  </application-components>
 </idea-plugin>
