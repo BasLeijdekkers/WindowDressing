@@ -18,6 +18,7 @@ package net.intellij.window;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
@@ -57,7 +58,7 @@ public class WindowActionGroup extends DefaultActionGroup {
     }
 
     public void activateNextWindow(AnActionEvent e) {
-        final Project project = e.getProject();
+        final Project project = e.getData(PlatformDataKeys.PROJECT);
         final WindowAction windowAction = findWindowAction(project.getName());
         final WindowAction next = windowAction.getNext();
         if (next != null) {
@@ -66,7 +67,7 @@ public class WindowActionGroup extends DefaultActionGroup {
     }
 
     public void activatePreviousWindow(AnActionEvent e) {
-        final Project project = e.getProject();
+        final Project project = e.getData(PlatformDataKeys.PROJECT);
         final WindowAction windowAction = findWindowAction(project.getName());
         final WindowAction previous = windowAction.getPrevious();
         if (previous != null) {
