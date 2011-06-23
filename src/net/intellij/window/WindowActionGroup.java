@@ -45,6 +45,7 @@ public class WindowActionGroup extends DefaultActionGroup {
                 latest = null;
             }
         }
+        windowAction.dispose();
         remove(windowAction);
     }
 
@@ -59,6 +60,9 @@ public class WindowActionGroup extends DefaultActionGroup {
 
     public void activateNextWindow(AnActionEvent e) {
         final Project project = e.getData(PlatformDataKeys.PROJECT);
+        if (project == null) {
+            return;
+        }
         final WindowAction windowAction = findWindowAction(project.getName());
         final WindowAction next = windowAction.getNext();
         if (next != null) {
@@ -68,6 +72,9 @@ public class WindowActionGroup extends DefaultActionGroup {
 
     public void activatePreviousWindow(AnActionEvent e) {
         final Project project = e.getData(PlatformDataKeys.PROJECT);
+        if (project == null) {
+            return;
+        }
         final WindowAction windowAction = findWindowAction(project.getName());
         final WindowAction previous = windowAction.getPrevious();
         if (previous != null) {
@@ -77,12 +84,11 @@ public class WindowActionGroup extends DefaultActionGroup {
 
     private WindowAction findWindowAction(String name) {
         final AnAction[] children = getChildren(null);
-        for (int i = 0; i < children.length; i++) {
-            final AnAction child = children[i];
+        for (AnAction child : children) {
             if (!(child instanceof WindowAction)) {
                 continue;
             }
-            final WindowAction windowAction = (WindowAction)child;
+            final WindowAction windowAction = (WindowAction) child;
             if (name.equals(windowAction.getTemplatePresentation().getText())) {
                 return windowAction;
             }
