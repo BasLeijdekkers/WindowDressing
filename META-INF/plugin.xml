@@ -1,5 +1,5 @@
 <!DOCTYPE idea-plugin PUBLIC "Plugin/DTD" "http://plugins.intellij.net/plugin.dtd">
-<idea-plugin version="2">
+<idea-plugin version="2" url="https://github.com/BasLeijdekkers/WindowDressing">
   <name>WindowDressing</name>
   <version>2.1</version>
 
@@ -23,6 +23,8 @@
   <project-components>
     <component>
       <implementation-class>net.intellij.window.WindowDressing</implementation-class>
+      <option name="workspace" value="true" />
+      <skipForDefaultProject/>
     </component>
   </project-components>
   <actions>
@@ -43,9 +45,9 @@
       <reference ref="WindowDressing.PreviousWindow"/>
     </group>
   </actions>
-  <application-components>
+  <!--<application-components>
     <component>
         <implementation-class>net.intellij.window.WindowPositionMemoizer</implementation-class>
     </component>
-  </application-components>
+  </application-components>-->
 </idea-plugin>
