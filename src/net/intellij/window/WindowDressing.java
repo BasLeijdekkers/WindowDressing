@@ -44,7 +44,7 @@ public class WindowDressing extends AbstractProjectComponent implements
     public void projectOpened() {
         final WindowActionGroup windowActionGroup = getWindowActionGroup();
         windowActionGroup.addProject(myProject.getName());
-        if (windowState.x == -1 || windowState.y == -1 ||
+        if (windowState == null || windowState.x == -1 || windowState.y == -1 ||
                 windowState.width == -1 || windowState.height == -1) {
             return;
         }
