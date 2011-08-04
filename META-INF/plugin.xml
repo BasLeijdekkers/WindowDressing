@@ -6,8 +6,12 @@
   <description><![CDATA[Adds open projects to the Window menu for easy switching between projects. A
     musthave on Mac OS X and pretty useful on other platforms too.]]></description>
   <change-notes><![CDATA[
+    v2.2<br>
+    * Remove project window position storing and restoring<br>
+    <br>
     v2.1.1<br>
     * Bug fix<br>
+    <br>
     v2.1<br>
     * Remember and restore project window positions<br>
     * Fix incompatibility with IDEA 10.5<br>
