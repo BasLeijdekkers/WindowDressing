@@ -10,6 +10,7 @@
     v2.1.2<br>
     * Disables this plugin when used on 108.1216 and newer (next version of IntelliJ IDEA) where
     the project switching functionality is built in.<br>
+    * Fixes NullPointerException from the Window menu when no projects are open.<br>
     <br>
     v2.1.1<br>
     * Bug fix<br>
